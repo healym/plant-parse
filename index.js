@@ -2,17 +2,11 @@ const dgram = require('dgram');
 const fs = require('fs');
 const csvWriter = require('csv-write-stream');
 
-const server;
+let server = dgram.createSocket('udp4');
 const server_active = false;
 
-module.exports = {
-  startServer,
-  writeToFile,
-  readLatest
-};
-
 const startServer = () => {
-  server = dgram.createSocket('udp4');
+  server.bind(5000);
   server_active = true;
 }
 
@@ -29,10 +23,24 @@ const writeToFile = (plantData) => {
   writer.end();
 };
 
-const readLatest = (ID) => {
-  console.log("TODO -- healym");
+const readLast = (ID) => {
+  return readLines(ID, numEntries);
 };
 
+const readLines = (ID, numEntries) => {
+  entries = [];
+  fs.readFile(ID, 'utf-8', function(err, data) {
+    if (err) throw err;
+
+    var lines = data.trim().split('\n');
+    var lastLines = lines.slice((0 - numEntries));
+    for (line in lastLines) {
+      fields = line.split(',');
+      entry = { humidity: fields[0], light_exposure: fields[1]};
+      entries.push(entry);
+    }
+  });
+};
 
 server.on('error', (err) => {
   const readLatest = 
@@ -50,3 +58,10 @@ server.on('listening', () => {
   const address = server.address();
   console.log(`server listening ${address.address}:${address.port}`);
 });
+
+module.exports = {
+  startServer,
+  writeToFile,
+  readLast,
+  readLines
+};

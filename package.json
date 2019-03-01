@@ -1,4 +1,16 @@
 {
-"name": "@mooper/plant-parse",
-"version": "1.0.0"
+  "name": "@mooper/plant-parse",
+  "version": "1.0.0",
+  "description": "Parses plant data from GroMet Sensor Pods",
+  "license": "MIT",
+  "repository": "healym/plant-parse",
+  "main": "index.js",
+  "keywords": [
+    "gro-met",
+    "plant",
+    "mooper"
+  ],
+  "dependencies": {
+    "csv-write-stream": "^2.0.0"
+  }
 }
